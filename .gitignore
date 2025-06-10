@@ -1,0 +1,10 @@
+# Environment Variables
+.env
+.env.*
+.env-*
+
+# You might also want to include these common patterns
+node_modules/
+.DS_Store
+.idea
+DADabase.iml

@@ -1,0 +1,29 @@
+<!-- public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dad Joke Search</title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Dad Joke Neural Search</h1>
+    <div class="search-container">
+        <input
+                type="text"
+                id="searchInput"
+                placeholder="Search for dad jokes..."
+                aria-label="Search for dad jokes"
+        >
+        <button onclick="searchJokes()" aria-label="Search">Search</button>
+    </div>
+    <div id="results" class="results-container" aria-live="polite">
+        <!-- Results will be inserted here -->
+    </div>
+    <div id="loading" class="loading" aria-hidden="true">Searching...</div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
