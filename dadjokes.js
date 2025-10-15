@@ -112,6 +112,7 @@ async function initializeOpenSearch() {
 
 // Function to index the jokes
 async function indexJokes() {
+    console.log("Indexing jokes.")
     try {
         await initializeOpenSearch();
 
