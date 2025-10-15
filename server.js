@@ -30,13 +30,13 @@ app.post('/api/search', async (req, res) => {
         const response = await client.search({
             index: 'dadjokes',
             body: {
-                size: 5,
+                size: 100,
                 query: {
                     neural: {
                         "joke-embedding": {
                             model_id: "aRoRN5cBnmOZFWB0spsS",
                             query_text: searchText,
-                            k: 5
+                            k: 100
                         }
                     }
                 }
