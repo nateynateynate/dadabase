@@ -75,7 +75,7 @@ async function createPipelineIfNotExists() {
                     processors: [
                         {
                             text_embedding: {
-                                model_id: "aRoRN5cBnmOZFWB0spsS",
+                                model_id: "yzWw6ZkBGj9iPPIHrSL1",
                                 field_map: {
                                     joke: "joke-embedding"
                                 }
@@ -116,7 +116,6 @@ async function indexJokes() {
     try {
         await initializeOpenSearch();
 
-
         const parser = fs
             .createReadStream('dad_jokes.csv')
             .pipe(parse({
@@ -124,16 +123,23 @@ async function indexJokes() {
                 skip_empty_lines: true
             }));
 
+        const bulkBody = [];
+        let count = 0;
         for await (const record of parser) {
-            await client.index({
-                index: 'dadjokes',
-                body: {
-                    joke: record.joke
-                }
-            });
+            bulkBody.push(
+                { index: { _index: 'dadjokes' } },
+                { joke: record.joke }
+            );
+            count++;
+            process.stdout.write(`\rProcessed ${count} jokes`);
         }
 
-        console.log('Finished indexing jokes');
+        if (bulkBody.length > 0) {
+            process.stdout.write('\nIndexing...');
+            await client.bulk({ body: bulkBody });
+        }
+
+        console.log('\nFinished indexing jokes');
     } catch (error) {
         console.error('Error indexing jokes:', error);
     }

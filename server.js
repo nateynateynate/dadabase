@@ -34,7 +34,7 @@ app.post('/api/search', async (req, res) => {
                 query: {
                     neural: {
                         "joke-embedding": {
-                            model_id: "aRoRN5cBnmOZFWB0spsS",
+                            model_id: "yzWw6ZkBGj9iPPIHrSL1",
                             query_text: searchText,
                             k: 100
                         }
