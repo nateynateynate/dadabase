@@ -1,3 +1,4 @@
+require('dotenv').config();
 const fs = require('fs');
 const { parse } = require('csv-parse');
 const { Client } = require('@opensearch-project/opensearch');
@@ -42,7 +43,7 @@ async function createIndexIfNotExists() {
                                 space_type: 'l2'
                             },
                             joke: {
-                                type: 'text'
+                                type: 'keyword'
                             }
                         }
                     }
@@ -75,7 +76,7 @@ async function createPipelineIfNotExists() {
                     processors: [
                         {
                             text_embedding: {
-                                model_id: "yzWw6ZkBGj9iPPIHrSL1",
+                                model_id: process.env.MODEL_ID,
                                 field_map: {
                                     joke: "joke-embedding"
                                 }
@@ -112,7 +113,6 @@ async function initializeOpenSearch() {
 
 // Function to index the jokes
 async function indexJokes() {
-    console.log("Indexing jokes.")
     try {
         await initializeOpenSearch();
 
@@ -123,19 +123,25 @@ async function indexJokes() {
                 skip_empty_lines: true
             }));
 
-        const bulkBody = [];
+        let bulkBody = [];
         let count = 0;
         for await (const record of parser) {
             bulkBody.push(
                 { index: { _index: 'dadjokes' } },
-                { joke: record.joke }
+                { joke: record.joke, jid: record.jid },
+
             );
             count++;
+            
+            if (bulkBody.length >= 4000) {
+                await client.bulk({ body: bulkBody });
+                bulkBody = [];
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
             process.stdout.write(`\rProcessed ${count} jokes`);
         }
 
         if (bulkBody.length > 0) {
-            process.stdout.write('\nIndexing...');
             await client.bulk({ body: bulkBody });
         }
 

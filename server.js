@@ -34,7 +34,7 @@ app.post('/api/search', async (req, res) => {
                 query: {
                     neural: {
                         "joke-embedding": {
-                            model_id: "yzWw6ZkBGj9iPPIHrSL1",
+                            model_id: process.env.MODEL_ID,
                             query_text: searchText,
                             k: 100
                         }
@@ -45,7 +45,8 @@ app.post('/api/search', async (req, res) => {
 
         const hits = response.body.hits.hits.map(hit => ({
             joke: hit._source.joke,
-            score: hit._score
+            score: hit._score,
+            jid: hit._source.jid
         }));
 
         res.json(hits);

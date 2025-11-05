@@ -35,6 +35,8 @@ async function searchJokes() {
             <div class="joke-card">
                 <div class="joke-text">${escapeHtml(joke.joke)}</div>
                 <div class="score">Similarity Score: ${joke.score.toFixed(2)}</div>
+                <div class="score">${joke.jid}</div>
+                
             </div>
         `).join('');
 
